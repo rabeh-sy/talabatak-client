@@ -36,9 +36,6 @@ export function RestaurantMenu({ restaurant, categories, restaurantId }: Restaur
                 {restaurant?.name || 'مطعم القروستو'}
               </h1>
               <p className="text-gray-600">قائمة الطعام</p>
-              <div className="text-sm text-gray-500 mt-2">
-                معرف المطعم: {restaurantId}
-              </div>
             </div>
           </div>
         </div>

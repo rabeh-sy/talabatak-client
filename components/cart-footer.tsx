@@ -54,19 +54,19 @@ export function CartFooter() {
   return (
     <>
       {/* Sticky Footer */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 shadow-lg z-50">
+      <div className="fixed bottom-0 left-0 right-0 bg-primary border-t border-primary/20 p-4 shadow-lg z-50">
         <div className="flex items-center justify-between max-w-md mx-auto">
           <div className="flex items-center space-x-3">
-            <ShoppingCart className="h-6 w-6 text-primary" />
+            <ShoppingCart className="h-6 w-6 text-secondary" />
             <div>
-              <div className="text-sm text-gray-600">المجموع</div>
-              <div className="text-lg font-bold text-primary">{state.total} د.ك</div>
+              <div className="text-sm text-gray-300">المجموع</div>
+              <div className="text-lg font-bold text-secondary">{state.total} د.ك</div>
             </div>
           </div>
           
           <Button
             onClick={() => setIsDialogOpen(true)}
-            className="bg-primary hover:bg-primary/90 text-white px-6"
+            className="bg-secondary hover:bg-secondary/90 text-gray-900 font-semibold px-6"
           >
             إتمام الطلب
           </Button>
