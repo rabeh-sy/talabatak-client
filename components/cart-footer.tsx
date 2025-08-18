@@ -60,7 +60,7 @@ export function CartFooter() {
             <ShoppingCart className="h-6 w-6 text-secondary" />
             <div>
               <div className="text-sm text-gray-300">المجموع</div>
-              <div className="text-lg font-bold text-secondary">{state.total} د.ك</div>
+              <div className="text-lg font-bold text-secondary">{state.total} ل.س</div>
             </div>
           </div>
           

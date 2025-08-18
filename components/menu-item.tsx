@@ -36,7 +36,7 @@ export function MenuItemComponent({ item }: MenuItemProps) {
           <p className="text-sm text-gray-400">{item.description}</p>
         </div>
         <div className="text-right">
-          <span className="text-lg font-semibold text-gray-400">{item.price} د.ك</span>
+          <span className="text-lg font-semibold text-gray-400">{item.price} ل.س</span>
           <div className="text-xs text-gray-400 mt-1">غير متوفر</div>
         </div>
       </div>
@@ -52,7 +52,7 @@ export function MenuItemComponent({ item }: MenuItemProps) {
       
       <div className="flex items-center space-x-3">
         <span className="text-lg font-semibold text-primary min-w-[60px] text-left">
-          {item.price} د.ك
+          {item.price} ل.س
         </span>
         
         {quantity === 0 ? (
