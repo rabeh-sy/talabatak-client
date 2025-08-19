@@ -62,7 +62,7 @@ export function RestaurantMenu({ restaurant, categories, restaurantId }: Restaur
         </div>
         
         {/* Cart Footer */}
-        <CartFooter />
+        <CartFooter restaurantId={restaurantId} />
         
         {/* Bottom padding to account for sticky footer */}
         <div className="h-24" />

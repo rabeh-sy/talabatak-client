@@ -6,17 +6,23 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { Input } from '@/components/ui/input'
 import { ShoppingCart, Check } from 'lucide-react'
 import { useCart } from '@/contexts/cart-context'
-import { submitOrder } from '@/lib/mock-data'
-import { Order } from '@/types'
+import { submitOrder, formatPrice } from '@/lib/api'
+import { BackendOrderRequest } from '@/types'
 
-export function CartFooter() {
+interface CartFooterProps {
+  restaurantId: string
+}
+
+export function CartFooter({ restaurantId }: CartFooterProps) {
   const { state, clearCart } = useCart()
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [tableNumber, setTableNumber] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const [submitError, setSubmitError] = useState<string | null>(null)
   
-  if (state.items.length === 0) {
+  // Only hide the cart footer if there are no items AND no dialog is open
+  if (state.items.length === 0 && !isDialogOpen) {
     return null
   }
   
@@ -24,15 +30,23 @@ export function CartFooter() {
     if (!tableNumber.trim()) return
     
     setIsSubmitting(true)
+    setSubmitError(null)
     
     try {
-      const orderData: Omit<Order, 'id' | 'status' | 'createdAt'> = {
-        items: state.items,
-        tableNumber: tableNumber.trim(),
-        total: state.total
+      const orderData: BackendOrderRequest = {
+        order: {
+          total: state.total,
+          table_number: tableNumber.trim(),
+          details: state.items.map(cartItem => ({
+            item_id: cartItem.item.id,
+            name: cartItem.item.name,
+            price: cartItem.item.price,
+            quantity: cartItem.quantity
+          }))
+        }
       }
       
-      await submitOrder(orderData)
+      await submitOrder(restaurantId, orderData)
       setIsSubmitted(true)
       clearCart()
       
@@ -45,7 +59,7 @@ export function CartFooter() {
       
     } catch (error) {
       console.error('Error submitting order:', error)
-      // You could show an error toast here
+      setSubmitError('حدث خطأ أثناء إرسال الطلب. يرجى المحاولة مرة أخرى.')
     } finally {
       setIsSubmitting(false)
     }
@@ -60,7 +74,7 @@ export function CartFooter() {
             <ShoppingCart className="h-6 w-6 text-secondary" />
             <div>
               <div className="text-sm text-gray-300">المجموع</div>
-              <div className="text-lg font-bold text-secondary">{state.total} ل.س</div>
+              <div className="text-lg font-bold text-secondary">{formatPrice(state.total)} ل.س</div>
             </div>
           </div>
           
@@ -92,6 +106,12 @@ export function CartFooter() {
                   dir="rtl"
                 />
               </div>
+              
+              {submitError && (
+                <div className="mt-3 text-sm text-red-600 text-center">
+                  {submitError}
+                </div>
+              )}
               
               <DialogFooter className="flex-col sm:flex-row gap-2">
                 <Button

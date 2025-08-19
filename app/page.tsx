@@ -9,7 +9,7 @@ export default function LandingPage() {
       <header className="bg-white shadow-sm border-b">
         <div className="max-w-6xl mx-auto px-4 py-6">
           <div className="text-center">
-            <h1 className="text-4xl font-bold text-primary mb-2">كروستو</h1>
+            <h1 className="text-4xl font-bold text-primary mb-2">قروستو</h1>
             <p className="text-lg text-gray-600">منصة طلبات الطعام الذكية</p>
           </div>
         </div>
@@ -126,7 +126,7 @@ export default function LandingPage() {
             يمكنك تجربة النظام مع مطعم تجريبي
           </p>
           <Link 
-            href="/restaurants/demo-restaurant-001"
+            href="/restaurants/res_ZR3MY7ygGdXKoiw0p5KrblED"
             className="inline-flex items-center px-8 py-3 bg-primary text-white font-semibold rounded-lg hover:bg-primary/90 transition-colors"
           >
             <Utensils className="h-5 w-5 ml-2" />
@@ -136,14 +136,11 @@ export default function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-green-900 text-white py-12 px-4">
+      <footer className="bg-gray-900 text-white py-12 px-4">
         <div className="max-w-6xl mx-auto text-center">
-          <h3 className="text-2xl font-bold mb-4">كروستو</h3>
-          <p className="text-gray-400">
-            منصة طلبات الطعام الذكية للمطاعم
-          </p>
+          <h3 className="text-2xl font-bold mb-4">قروستو</h3>
           <p className="text-gray-400 mb-6">
-            أحد منتجات رابح للتقنية
+            منصة طلبات الطعام الذكية للمطاعم والعملاء
           </p>
           <div className="text-sm text-gray-500">
             © 2024 قروستو. جميع الحقوق محفوظة

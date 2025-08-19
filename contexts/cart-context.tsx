@@ -10,8 +10,8 @@ interface CartState {
 
 type CartAction =
   | { type: 'ADD_ITEM'; payload: MenuItem }
-  | { type: 'REMOVE_ITEM'; payload: string }
-  | { type: 'UPDATE_QUANTITY'; payload: { itemId: string; quantity: number } }
+  | { type: 'REMOVE_ITEM'; payload: number }
+  | { type: 'UPDATE_QUANTITY'; payload: { itemId: number; quantity: number } }
   | { type: 'CLEAR_CART' }
 
 const initialState: CartState = {
@@ -83,8 +83,8 @@ function cartReducer(state: CartState, action: CartAction): CartState {
 interface CartContextType {
   state: CartState
   addItem: (item: MenuItem) => void
-  removeItem: (itemId: string) => void
-  updateQuantity: (itemId: string, quantity: number) => void
+  removeItem: (itemId: number) => void
+  updateQuantity: (itemId: number, quantity: number) => void
   clearCart: () => void
 }
 
@@ -97,11 +97,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
     dispatch({ type: 'ADD_ITEM', payload: item })
   }
   
-  const removeItem = (itemId: string) => {
+  const removeItem = (itemId: number) => {
     dispatch({ type: 'REMOVE_ITEM', payload: itemId })
   }
   
-  const updateQuantity = (itemId: string, quantity: number) => {
+  const updateQuantity = (itemId: number, quantity: number) => {
     dispatch({ type: 'UPDATE_QUANTITY', payload: { itemId, quantity } })
   }
   

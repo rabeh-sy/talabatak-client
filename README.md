@@ -11,7 +11,7 @@ A modern restaurant ordering web application built with Next.js and shadcn/ui, d
 - 🎨 **Custom Theme**: Uses restaurant brand colors (#E6E6DC and #103935)
 - ⚡ **Loading States**: Skeleton loaders while fetching data
 - 📋 **Order Submission**: Submit orders with table number input
-- 🔄 **Mock Data**: Ready for backend integration
+- 🔌 **Real Backend**: Fetches data and posts orders to your API
 
 ## Tech Stack
 
@@ -27,137 +27,69 @@ A modern restaurant ordering web application built with Next.js and shadcn/ui, d
 
 - Node.js 18+ 
 - npm or yarn
+- Backend running at `http://localhost:3000`
+
+### Configuration
+
+This app expects a Rails backend exposing endpoints like:
+
+- GET `http://localhost:3000/api/v1/restaurants/{restaurant_id}.json`
+- POST `http://localhost:3000/api/v1/restaurants/{restaurant_id}/orders.json`
+
+Update `lib/api.ts` if your base URL changes.
 
 ### Installation
 
-1. Clone the repository:
 ```bash
 git clone <your-repo-url>
 cd qrosto-client
-```
-
-2. Install dependencies:
-```bash
 npm install
-```
-
-3. Run the development server:
-```bash
 npm run dev
 ```
 
-4. Open [http://localhost:3000](http://localhost:3000) in your browser.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+## Demo Restaurant
+
+Use this demo restaurant ID: `res_ZR3MY7ygGdXKoiw0p5KrblED`.
+The landing page links to `/restaurants/res_ZR3MY7ygGdXKoiw0p5KrblED`.
+
+## Backend Integration
+
+Implemented in `lib/api.ts`:
+- `fetchRestaurantInfo(id)` – returns `{ id, name, logo, status }` and handles 404 vs network errors
+- `fetchMenuItems(id)` – returns an array of menu items with `category`; UI groups by category
+- `submitOrder(id, order)` – posts the order with unit prices per item
+
+Error handling:
+- 404 restaurant → Not found page
+- Network error → “try again later” page
+- Order failure → inline message; user can resubmit
+
+## Price Formatting
+
+- Prices are formatted as western numerals with commas, e.g., `100,000`
+- Currency: Syrian pounds `ل.س`
 
 ## Project Structure
 
 ```
 qrosto-client/
-├── app/                    # Next.js app directory
-│   ├── globals.css        # Global styles with RTL support
-│   ├── layout.tsx         # Root layout
-│   └── page.tsx           # Main menu page
-├── components/             # React components
-│   ├── ui/                # shadcn/ui components
-│   ├── menu-item.tsx      # Individual menu item
-│   ├── cart-footer.tsx    # Sticky cart footer
-│   └── menu-skeleton.tsx  # Loading skeleton
-├── contexts/               # React contexts
-│   └── cart-context.tsx   # Cart state management
-├── lib/                    # Utility functions
-│   └── mock-data.ts       # Mock API data
-├── types/                  # TypeScript type definitions
-│   └── index.ts           # App types
-└── netlify.toml           # Netlify deployment config
+├── app/
+├── components/
+├── contexts/
+├── lib/
+│   └── api.ts
+├── types/
+└── netlify.toml
 ```
-
-## Customization
-
-### Theme Colors
-
-The app uses your specified brand colors:
-- Primary: `#103935` (Dark Green)
-- Secondary: `#E6E6DC` (Light Beige)
-
-These are defined in `app/globals.css` and can be easily modified.
-
-### Menu Data
-
-Edit `lib/mock-data.ts` to customize:
-- Restaurant information
-- Menu categories and items
-- Pricing and descriptions
-
-### Backend Integration
-
-Replace mock data functions in `lib/mock-data.ts` with real API calls:
-- `fetchRestaurantInfo()` - Get restaurant details
-- `fetchMenuItems()` - Get menu categories and items
-- `submitOrder()` - Submit customer orders
 
 ## Deployment
 
-### Netlify (Recommended)
+- Netlify configuration is provided in `netlify.toml`
+- Build: `npm run build` | Start: `npm run start`
 
-1. Push your code to GitHub
-2. Connect your repository to Netlify
-3. The `netlify.toml` file is already configured
-4. Deploy automatically on every push
+## Notes
 
-### Manual Build
-
-```bash
-npm run build
-npm run start
-```
-
-### Environment Variables
-
-Create `.env.local` for environment-specific configuration:
-
-```env
-NEXT_PUBLIC_API_URL=your-backend-url
-NEXT_PUBLIC_RESTAURANT_ID=your-restaurant-id
-```
-
-## Usage Flow
-
-1. **Customer Experience**:
-   - Customer scans QR code on table
-   - Opens web app showing restaurant menu
-   - Browses categorized menu items
-   - Adds items to cart with quantities
-   - Reviews cart and submits order
-   - Enters table number
-   - Receives order confirmation
-
-2. **Restaurant Staff**:
-   - Receives orders via backend
-   - Processes and prepares food
-   - Delivers to customer's table
-
-## Browser Support
-
-- Chrome 90+
-- Firefox 88+
-- Safari 14+
-- Edge 90+
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
-
-## License
-
-This project is licensed under the MIT License.
-
-## Support
-
-For support or questions, please contact the development team.
-
----
-
-**Note**: This is a frontend-only implementation. Backend integration is required for production use.
+- Restaurant theming is unified for all restaurants (no dynamic theme per API)
+- RTL and Rubik font are applied globally

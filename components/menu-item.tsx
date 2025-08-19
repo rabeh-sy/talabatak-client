@@ -5,6 +5,7 @@ import { MenuItem } from '@/types'
 import { Button } from '@/components/ui/button'
 import { Plus, Minus } from 'lucide-react'
 import { useCart } from '@/contexts/cart-context'
+import { formatPrice } from '@/lib/api'
 
 interface MenuItemProps {
   item: MenuItem
@@ -36,7 +37,7 @@ export function MenuItemComponent({ item }: MenuItemProps) {
           <p className="text-sm text-gray-400">{item.description}</p>
         </div>
         <div className="text-right">
-          <span className="text-lg font-semibold text-gray-400">{item.price} ل.س</span>
+          <span className="text-lg font-semibold text-gray-400">{formatPrice(item.price)} ل.س</span>
           <div className="text-xs text-gray-400 mt-1">غير متوفر</div>
         </div>
       </div>
@@ -52,7 +53,7 @@ export function MenuItemComponent({ item }: MenuItemProps) {
       
       <div className="flex items-center space-x-3">
         <span className="text-lg font-semibold text-primary min-w-[60px] text-left">
-          {item.price} ل.س
+          {formatPrice(item.price)} ل.س
         </span>
         
         {quantity === 0 ? (

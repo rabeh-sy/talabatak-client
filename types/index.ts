@@ -1,5 +1,5 @@
 export interface MenuItem {
-  id: string
+  id: number
   name: string
   description: string
   price: number
@@ -32,8 +32,18 @@ export interface Restaurant {
   id: string
   name: string
   logo: string
-  theme: {
-    primaryColor: string
-    secondaryColor: string
+  status: 'active' | 'inactive'
+}
+
+export interface BackendOrderRequest {
+  order: {
+    total: number
+    table_number: string
+    details: Array<{
+      item_id: number
+      name: string
+      price: number
+      quantity: number
+    }>
   }
 }
