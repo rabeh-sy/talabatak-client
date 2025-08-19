@@ -33,13 +33,13 @@ export function InactiveRestaurant({ restaurantName }: InactiveRestaurantProps) 
               العودة للصفحة الرئيسية
             </Link>
             
-            <button 
-              onClick={() => window.location.reload()} 
+            <Link 
+              href={`/restaurants/${restaurantName}`}
               className="inline-flex items-center justify-center w-full px-6 py-3 border border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 transition-colors"
             >
               <Clock className="h-5 w-5 ml-2" />
               إعادة المحاولة
-            </button>
+            </Link>
           </div>
         </div>
       </div>

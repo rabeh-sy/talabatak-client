@@ -51,12 +51,12 @@ export default async function RestaurantPage({ params }: RestaurantPageProps) {
             <div className="text-center">
               <h1 className="text-2xl font-bold text-red-600 mb-4">خطأ في الاتصال</h1>
               <p className="text-gray-600 mb-6">حدث خطأ في الاتصال بالخادم، يرجى المحاولة مرة أخرى لاحقاً</p>
-              <button 
-                onClick={() => window.location.reload()} 
-                className="px-4 py-2 bg-primary text-white rounded hover:bg-primary/90"
+              <Link 
+                href={`/restaurants/${restaurantId}`}
+                className="inline-block px-4 py-2 bg-primary text-white rounded hover:bg-primary/90"
               >
                 إعادة المحاولة
-              </button>
+              </Link>
             </div>
           </div>
         )
