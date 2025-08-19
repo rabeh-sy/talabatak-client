@@ -126,7 +126,7 @@ export default function LandingPage() {
             يمكنك تجربة النظام مع مطعم تجريبي
           </p>
           <Link 
-            href="/restaurants/res_ZR3MY7ygGdXKoiw0p5KrblED"
+            href="/restaurants/res_ZkMxjEADv2GkLfv2neVOwKRG"
             className="inline-flex items-center px-8 py-3 bg-primary text-white font-semibold rounded-lg hover:bg-primary/90 transition-colors"
           >
             <Utensils className="h-5 w-5 ml-2" />
