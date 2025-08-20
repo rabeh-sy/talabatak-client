@@ -9,7 +9,7 @@ export default function LandingPage() {
       <header className="bg-white shadow-sm border-b">
         <div className="max-w-6xl mx-auto px-4 py-6">
           <div className="text-center">
-            <h1 className="text-4xl font-bold text-primary mb-2">قروستو</h1>
+            <h1 className="text-4xl font-bold text-primary mb-2">طلباتك</h1>
             <p className="text-lg text-gray-600">منصة طلبات الطعام الذكية</p>
           </div>
         </div>
@@ -34,7 +34,7 @@ export default function LandingPage() {
       <section className="py-16 px-4 bg-white">
         <div className="max-w-6xl mx-auto">
           <h3 className="text-2xl font-bold text-center text-gray-900 mb-12">
-            لماذا تختار قروستو؟
+            لماذا تختار طلباتك؟
           </h3>
           
           <div className="grid md:grid-cols-3 gap-8">
@@ -136,14 +136,14 @@ export default function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12 px-4">
+      <footer className="bg-primary text-white py-12 px-4">
         <div className="max-w-6xl mx-auto text-center">
-          <h3 className="text-2xl font-bold mb-4">قروستو</h3>
+          <h3 className="text-2xl font-bold mb-4">طلباتك</h3>
           <p className="text-gray-400 mb-6">
             منصة طلبات الطعام الذكية للمطاعم والعملاء
           </p>
           <div className="text-sm text-gray-500">
-            © 2024 قروستو. جميع الحقوق محفوظة
+            طلباتك - إحدى منتجات شركة رابح للتقنية. جميع الحقوق محفوظة © 2025
           </div>
         </div>
       </footer>

@@ -9,7 +9,7 @@ const rubik = Rubik({
 });
 
 export const metadata: Metadata = {
-  title: "قروستو - منصة طلبات الطعام الذكية",
+  title: "طلباتك - منصة طلبات الطعام الذكية",
   description: "منصة طلبات الطعام الذكية للمطاعم والعملاء",
 };
 

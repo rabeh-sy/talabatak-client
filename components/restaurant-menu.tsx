@@ -33,7 +33,7 @@ export function RestaurantMenu({ restaurant, categories, restaurantId }: Restaur
                 </div>
               )}
               <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                {restaurant?.name || 'مطعم القروستو'}
+                {restaurant?.name || 'مطعم الطلباتك'}
               </h1>
               <p className="text-gray-600">قائمة الطعام</p>
             </div>
