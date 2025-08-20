@@ -13,35 +13,39 @@ export function MenuSkeleton() {
               <Skeleton className="h-16 w-16 mx-auto rounded-full" />
             </div>
             {/* Restaurant name skeleton */}
-            <Skeleton className="h-8 w-48 mx-auto mb-2" />
+            <Skeleton className="h-8 w-32 sm:w-48 mx-auto mb-2" />
             {/* Subtitle skeleton */}
-            <Skeleton className="h-5 w-32 mx-auto" />
+            <Skeleton className="h-5 w-24 sm:w-32 mx-auto" />
           </div>
         </div>
       </div>
       
       {/* Menu Content Skeleton */}
       <div className="max-w-4xl mx-auto px-4 py-8">
-        <div className="space-y-8">
+        <div className="space-y-6 sm:space-y-8">
           {/* Categories Skeleton */}
           {[1, 2, 3, 4, 5].map((categoryIndex) => (
-            <div key={categoryIndex} className="bg-white rounded-lg shadow-sm border">
+            <div key={categoryIndex} className="bg-white rounded-lg shadow-sm border overflow-hidden">
               {/* Category Title */}
-              <div className="border-b border-gray-200 px-6 py-4">
-                <Skeleton className="h-6 w-32" />
+              <div className="border-b border-gray-200 px-4 sm:px-6 py-4">
+                <Skeleton className="h-6 w-24 sm:w-32" />
               </div>
               
               {/* Menu Items */}
               <div className="divide-y divide-gray-200">
                 {[1, 2, 3].map((itemIndex) => (
                   <div key={itemIndex} className="flex items-center justify-between p-4">
-                    <div className="flex-1 space-y-2">
-                      <Skeleton className="h-6 w-48" />
-                      <Skeleton className="h-4 w-64" />
+                    <div className="flex-1 min-w-0 space-y-2 pr-3">
+                      {/* Item name skeleton - responsive width */}
+                      <Skeleton className="h-6 w-full max-w-[200px] sm:max-w-[300px]" />
+                      {/* Item description skeleton - responsive width */}
+                      <Skeleton className="h-4 w-full max-w-[150px] sm:max-w-[250px]" />
                     </div>
-                    <div className="flex items-center space-x-3">
-                      <Skeleton className="h-6 w-16" />
-                      <Skeleton className="h-8 w-20" />
+                    <div className="flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
+                      {/* Price skeleton */}
+                      <Skeleton className="h-6 w-12 sm:w-16" />
+                      {/* Add button skeleton */}
+                      <Skeleton className="h-8 w-16 sm:w-20" />
                     </div>
                   </div>
                 ))}
