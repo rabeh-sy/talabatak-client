@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input'
 import { ShoppingCart, Check, X } from 'lucide-react'
 import { useCart } from '@/contexts/cart-context'
 import { submitOrder, formatPrice } from '@/lib/api'
+import { convertArabicDigitsToEnglish } from '@/lib/utils'
 import { BackendOrderRequest } from '@/types'
 
 interface CartFooterProps {
@@ -77,7 +78,7 @@ const MobileModal = ({
                   dir="rtl"
                   autoFocus
                   inputMode="numeric"
-                  pattern="[0-9]*"
+                  pattern="[0-9٠١٢٣٤٥٦٧٨٩]*"
                 />
               </div>
               
@@ -113,7 +114,7 @@ const MobileModal = ({
                 تم إرسال طلبك بنجاح!
               </h3>
               <p className="text-gray-600">
-                سيتم إحضار طلبك إلى الطاولة رقم {tableNumber}
+                سيتم إحضار طلبك إلى الطاولة رقم {convertArabicDigitsToEnglish(tableNumber)}
               </p>
             </div>
           )}
@@ -151,10 +152,13 @@ export function CartFooter({ restaurantId }: CartFooterProps) {
     setSubmitError(null)
     
     try {
+      // Convert Arabic digits to English digits before sending to backend
+      const convertedTableNumber = convertArabicDigitsToEnglish(tableNumber.trim())
+      
       const orderData: BackendOrderRequest = {
         order: {
           total: state.total,
-          table_number: tableNumber.trim(),
+          table_number: convertedTableNumber,
           details: state.items.map(cartItem => ({
             item_id: cartItem.item.id,
             name: cartItem.item.name,
@@ -245,6 +249,7 @@ export function CartFooter({ restaurantId }: CartFooterProps) {
                     onChange={(e) => setTableNumber(e.target.value)}
                     className="text-center text-lg"
                     dir="rtl"
+                    pattern="[0-9٠١٢٣٤٥٦٧٨٩]*"
                   />
                 </div>
                 
@@ -278,7 +283,7 @@ export function CartFooter({ restaurantId }: CartFooterProps) {
                   تم إرسال طلبك بنجاح!
                 </h3>
                 <p className="text-gray-600">
-                  سيتم إحضار طلبك إلى الطاولة رقم {tableNumber}
+                  سيتم إحضار طلبك إلى الطاولة رقم {convertArabicDigitsToEnglish(tableNumber)}
                 </p>
               </div>
             )}
