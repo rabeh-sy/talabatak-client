@@ -144,11 +144,6 @@ export function CartFooter({ restaurantId }: CartFooterProps) {
     return () => window.removeEventListener('resize', checkMobile)
   }, [])
   
-  // Only hide the cart footer if there are no items AND no dialog is open
-  if (state.items.length === 0 && !isDialogOpen) {
-    return null
-  }
-  
   const handleSubmitOrder = useCallback(async () => {
     if (!tableNumber.trim()) return
     
@@ -193,6 +188,11 @@ export function CartFooter({ restaurantId }: CartFooterProps) {
     setTableNumber('')
     setSubmitError(null)
   }, [])
+  
+  // Only hide the cart footer if there are no items AND no dialog is open
+  if (state.items.length === 0 && !isDialogOpen) {
+    return null
+  }
   
   return (
     <>
