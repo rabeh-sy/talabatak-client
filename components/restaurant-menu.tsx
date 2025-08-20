@@ -16,7 +16,7 @@ interface RestaurantMenuProps {
 export function RestaurantMenu({ restaurant, categories, restaurantId }: RestaurantMenuProps) {
   return (
     <CartProvider>
-      <div className="min-h-screen bg-gray-50" dir="rtl">
+      <div className="min-h-screen bg-warm-beige" dir="rtl">
         {/* Header */}
         <div className="bg-white shadow-sm border-b">
           <div className="max-w-4xl mx-auto px-4 py-6">

@@ -8,7 +8,7 @@ interface InactiveRestaurantProps {
 
 export function InactiveRestaurant({ restaurantName }: InactiveRestaurantProps) {
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center" dir="rtl">
+    <div className="min-h-screen bg-warm-beige flex items-center justify-center" dir="rtl">
       <div className="max-w-md mx-auto text-center px-4">
         <div className="bg-white rounded-lg shadow-lg p-8">
           <div className="bg-yellow-100 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-6">

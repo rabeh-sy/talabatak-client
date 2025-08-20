@@ -70,7 +70,7 @@ export function RestaurantPageClient({ restaurantId }: RestaurantPageClientProps
   // Show skeleton while loading
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50" dir="rtl">
+      <div className="min-h-screen bg-warm-beige" dir="rtl">
         <div className="max-w-4xl mx-auto px-4 py-8">
           <MenuSkeleton />
         </div>
@@ -87,7 +87,7 @@ export function RestaurantPageClient({ restaurantId }: RestaurantPageClientProps
   if (error) {
     if (errorType === 'not_found') {
       return (
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center" dir="rtl">
+        <div className="min-h-screen bg-warm-beige flex items-center justify-center" dir="rtl">
           <div className="text-center">
             <h1 className="text-2xl font-bold text-red-600 mb-4">لم يتم العثور على المطعم</h1>
             <p className="text-gray-600 mb-6">المطعم الذي تبحث عنه غير موجود</p>
@@ -102,7 +102,7 @@ export function RestaurantPageClient({ restaurantId }: RestaurantPageClientProps
       )
     } else if (errorType === 'connection') {
       return (
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center" dir="rtl">
+        <div className="min-h-screen bg-warm-beige flex items-center justify-center" dir="rtl">
           <div className="text-center">
             <h1 className="text-2xl font-bold text-red-600 mb-4">خطأ في الاتصال</h1>
             <p className="text-gray-600 mb-6">حدث خطأ في الاتصال بالخادم، يرجى المحاولة مرة أخرى لاحقاً</p>
@@ -117,16 +117,16 @@ export function RestaurantPageClient({ restaurantId }: RestaurantPageClientProps
       )
     } else {
       return (
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center" dir="rtl">
+        <div className="min-h-screen bg-warm-beige flex items-center justify-center" dir="rtl">
           <div className="text-center">
             <h1 className="text-2xl font-bold text-red-600 mb-4">خطأ</h1>
             <p className="text-gray-600 mb-6">حدث خطأ غير متوقع</p>
-            <Link 
-              href="/"
-              className="inline-block px-4 py-2 bg-primary text-white rounded hover:bg-primary/90"
-            >
-              العودة للصفحة الرئيسية
-            </Link>
+                          <Link 
+                href="/"
+                className="inline-block px-4 py-2 bg-primary text-white rounded hover:bg-primary/90"
+              >
+                العودة للصفحة الرئيسية
+              </Link>
           </div>
         </div>
       )
@@ -140,7 +140,7 @@ export function RestaurantPageClient({ restaurantId }: RestaurantPageClientProps
 
   // Fallback - should not reach here
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center" dir="rtl">
+    <div className="min-h-screen bg-warm-beige flex items-center justify-center" dir="rtl">
       <div className="text-center">
         <h1 className="text-2xl font-bold text-gray-600 mb-4">لا توجد بيانات</h1>
         <p className="text-gray-600 mb-6">لم يتم العثور على بيانات المطعم</p>

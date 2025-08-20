@@ -2,7 +2,10 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
-    domains: ['localhost', 'qr-service.rabeh.sy'],
+    remotePatterns: [
+      new URL('http://localhost/**'),
+      new URL('https://qr-service.rabeh.sy/**')
+    ],
   },
 };
 

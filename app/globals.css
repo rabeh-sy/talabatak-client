@@ -76,6 +76,7 @@
   --sidebar-accent-foreground: #103935;
   --sidebar-border: oklch(0.929 0.013 255.508);
   --sidebar-ring: #103935;
+  --warm-beige: #EBE9E0;
 }
 
 .dark {
@@ -132,4 +133,10 @@
   .font-medium { font-weight: 500; }
   .font-semibold { font-weight: 600; }
   .font-bold { font-weight: 700; }
+}
+
+@layer utilities {
+  .bg-warm-beige {
+    background-color: var(--warm-beige);
+  }
 }

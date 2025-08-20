@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /restaurants/
+
+# Restaurant pages are for QR code access only
+# and should not be indexed by search engines
