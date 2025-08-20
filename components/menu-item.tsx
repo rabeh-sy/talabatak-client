@@ -45,7 +45,7 @@ export function MenuItemComponent({ item }: MenuItemProps) {
   }
   
   return (
-    <div className="flex items-center justify-between p-4 border-b border-gray-200 hover:bg-gray-50 transition-colors">
+    <div className="flex items-center justify-between p-4 border-b border-gray-200 hover:bg-green-50 transition-colors">
       <div className="flex-1">
         <h3 className="text-lg font-semibold text-gray-900">{item.name}</h3>
         <p className="text-sm text-gray-600 mt-1">{item.description}</p>
