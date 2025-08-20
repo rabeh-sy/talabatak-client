@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
@@ -11,6 +11,116 @@ import { BackendOrderRequest } from '@/types'
 
 interface CartFooterProps {
   restaurantId: string
+}
+
+// Mobile Bottom Sheet Modal - moved outside to prevent re-creation
+const MobileModal = ({ 
+  isOpen, 
+  tableNumber, 
+  setTableNumber, 
+  submitError, 
+  isSubmitting, 
+  isSubmitted, 
+  onSubmit, 
+  onClose 
+}: {
+  isOpen: boolean
+  tableNumber: string
+  setTableNumber: (value: string) => void
+  submitError: string | null
+  isSubmitting: boolean
+  isSubmitted: boolean
+  onSubmit: () => void
+  onClose: () => void
+}) => {
+  if (!isOpen) return null
+
+  return (
+    <>
+      {/* Backdrop */}
+      <div 
+        className="fixed inset-0 bg-black/50 z-50 md:hidden"
+        onClick={onClose}
+      />
+      
+      {/* Bottom Sheet */}
+      <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-white rounded-t-2xl shadow-2xl transform transition-transform duration-300 ease-out">
+        <div className="p-6">
+          {/* Handle bar */}
+          <div className="flex justify-center mb-4">
+            <div className="w-12 h-1 bg-gray-300 rounded-full"></div>
+          </div>
+          
+          {/* Close button */}
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-100"
+          >
+            <X className="h-5 w-5 text-gray-500" />
+          </button>
+          
+          {/* Header */}
+          <div className="text-center mb-6">
+            <h2 className="text-xl font-semibold text-gray-900">أدخل رقم الطاولة</h2>
+          </div>
+          
+          {!isSubmitted ? (
+            <>
+              {/* Input */}
+              <div className="mb-6">
+                <Input
+                  type="text"
+                  placeholder="رقم الطاولة"
+                  value={tableNumber}
+                  onChange={(e) => setTableNumber(e.target.value)}
+                  className="text-center text-lg h-14"
+                  dir="rtl"
+                  autoFocus
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                />
+              </div>
+              
+              {/* Error message */}
+              {submitError && (
+                <div className="mb-4 text-sm text-red-600 text-center">
+                  {submitError}
+                </div>
+              )}
+              
+              {/* Buttons */}
+              <div className="space-y-3">
+                <Button
+                  onClick={onSubmit}
+                  disabled={!tableNumber.trim() || isSubmitting}
+                  className="w-full h-14 bg-primary hover:bg-primary/90 text-lg font-semibold"
+                >
+                  {isSubmitting ? 'جاري الإرسال...' : 'إرسال الطلب'}
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={onClose}
+                  className="w-full h-14 text-lg font-semibold"
+                >
+                  إلغاء
+                </Button>
+              </div>
+            </>
+          ) : (
+            <div className="py-8 text-center">
+              <Check className="h-16 w-16 text-green-500 mx-auto mb-4" />
+              <h3 className="text-xl font-semibold text-green-700 mb-2">
+                تم إرسال طلبك بنجاح!
+              </h3>
+              <p className="text-gray-600">
+                سيتم إحضار طلبك إلى الطاولة رقم {tableNumber}
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+    </>
+  )
 }
 
 export function CartFooter({ restaurantId }: CartFooterProps) {
@@ -39,7 +149,7 @@ export function CartFooter({ restaurantId }: CartFooterProps) {
     return null
   }
   
-  const handleSubmitOrder = async () => {
+  const handleSubmitOrder = useCallback(async () => {
     if (!tableNumber.trim()) return
     
     setIsSubmitting(true)
@@ -76,98 +186,13 @@ export function CartFooter({ restaurantId }: CartFooterProps) {
     } finally {
       setIsSubmitting(false)
     }
-  }
+  }, [tableNumber, state.total, state.items, restaurantId, clearCart])
 
-  const closeDialog = () => {
+  const closeDialog = useCallback(() => {
     setIsDialogOpen(false)
     setTableNumber('')
     setSubmitError(null)
-  }
-  
-  // Mobile Bottom Sheet Modal
-  const MobileModal = () => (
-    <>
-      {/* Backdrop */}
-      <div 
-        className="fixed inset-0 bg-black/50 z-50 md:hidden"
-        onClick={closeDialog}
-      />
-      
-      {/* Bottom Sheet */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-white rounded-t-2xl shadow-2xl transform transition-transform duration-300 ease-out">
-        <div className="p-6">
-          {/* Handle bar */}
-          <div className="flex justify-center mb-4">
-            <div className="w-12 h-1 bg-gray-300 rounded-full"></div>
-          </div>
-          
-          {/* Close button */}
-          <button
-            onClick={closeDialog}
-            className="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-100"
-          >
-            <X className="h-5 w-5 text-gray-500" />
-          </button>
-          
-          {/* Header */}
-          <div className="text-center mb-6">
-            <h2 className="text-xl font-semibold text-gray-900">أدخل رقم الطاولة</h2>
-          </div>
-          
-          {!isSubmitted ? (
-            <>
-              {/* Input */}
-              <div className="mb-6">
-                <Input
-                  type="text"
-                  placeholder="رقم الطاولة"
-                  value={tableNumber}
-                  onChange={(e) => setTableNumber(e.target.value)}
-                  className="text-center text-lg h-14"
-                  dir="rtl"
-                />
-              </div>
-              
-              {/* Error message */}
-              {submitError && (
-                <div className="mb-4 text-sm text-red-600 text-center">
-                  {submitError}
-                </div>
-              )}
-              
-              {/* Buttons */}
-              <div className="space-y-3">
-                <Button
-                  onClick={handleSubmitOrder}
-                  disabled={!tableNumber.trim() || isSubmitting}
-                  className="w-full h-14 bg-primary hover:bg-primary/90 text-lg font-semibold"
-                >
-                  {isSubmitting ? 'جاري الإرسال...' : 'إرسال الطلب'}
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={closeDialog}
-                  className="w-full h-14 text-lg font-semibold"
-                >
-                  إلغاء
-                </Button>
-              </div>
-            </>
-          ) : (
-            <div className="py-8 text-center">
-              <Check className="h-16 w-16 text-green-500 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-green-700 mb-2">
-                تم إرسال طلبك بنجاح!
-              </h3>
-              <p className="text-gray-600">
-                سيتم إحضار طلبك إلى الطاولة رقم {tableNumber}
-              </p>
-            </div>
-          )}
-        </div>
-      </div>
-    </>
-  )
+  }, [])
   
   return (
     <>
@@ -193,7 +218,16 @@ export function CartFooter({ restaurantId }: CartFooterProps) {
       
       {/* Show mobile modal on mobile, desktop dialog on desktop */}
       {isMobile ? (
-        isDialogOpen && <MobileModal />
+        <MobileModal
+          isOpen={isDialogOpen}
+          tableNumber={tableNumber}
+          setTableNumber={setTableNumber}
+          submitError={submitError}
+          isSubmitting={isSubmitting}
+          isSubmitted={isSubmitted}
+          onSubmit={handleSubmitOrder}
+          onClose={closeDialog}
+        />
       ) : (
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogContent className="sm:max-w-md">
