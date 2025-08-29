@@ -43,7 +43,6 @@ function RestaurantMenuContent({ restaurant, categories, restaurantId }: Restaur
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
               {restaurant?.name || 'مطعم الطلباتك'}
             </h1>
-            <p className="text-gray-600">قائمة الطعام</p>
           </div>
         </div>
       </div>
@@ -78,7 +77,7 @@ function RestaurantMenuContent({ restaurant, categories, restaurantId }: Restaur
                   {category.name}
                 </h2>
                 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 items-stretch">
                   {category.items.map((item) => (
                     <MenuItemCard key={item.id} item={item} currency={restaurant.currency || 'ل.س'} />
                   ))}
