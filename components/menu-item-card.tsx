@@ -16,8 +16,26 @@ interface MenuItemCardProps {
 
 export function MenuItemCard({ item, currency }: MenuItemCardProps) {
   const { state, addItem, updateQuantity } = useCart()
-  const { getButtonColors } = useTheme()
+  const { getButtonColors, themeColor } = useTheme()
   const buttonColors = getButtonColors()
+  
+  // Get theme-based hover color
+  const getHoverColor = () => {
+    switch (themeColor) {
+      case 'green':
+        return 'hover:shadow-md'
+      case 'yellow':
+        return 'hover:shadow-md hover:shadow-yellow-100'
+      case 'blue':
+        return 'hover:shadow-md hover:shadow-blue-100'
+      case 'red':
+        return 'hover:shadow-md hover:shadow-red-100'
+      case 'black':
+        return 'hover:shadow-md hover:shadow-gray-100'
+      default:
+        return 'hover:shadow-md'
+    }
+  }
   
   const cartItem = state.items.find(cartItem => cartItem.item.id === item.id)
   const quantity = cartItem?.quantity || 0
@@ -69,7 +87,7 @@ export function MenuItemCard({ item, currency }: MenuItemCardProps) {
   }
   
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
+    <div className={`bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden ${getHoverColor()} transition-shadow`}>
       {/* Image */}
       <div className="relative h-48 bg-gray-100">
         {item.image_url ? (

@@ -15,8 +15,26 @@ interface MenuItemProps {
 
 export function MenuItemComponent({ item, currency }: MenuItemProps) {
   const { state, addItem, updateQuantity } = useCart()
-  const { getButtonColors } = useTheme()
+  const { getButtonColors, themeColor } = useTheme()
   const buttonColors = getButtonColors()
+  
+  // Get theme-based hover color
+  const getHoverColor = () => {
+    switch (themeColor) {
+      case 'green':
+        return 'hover:bg-green-50'
+      case 'yellow':
+        return 'hover:bg-yellow-50'
+      case 'blue':
+        return 'hover:bg-blue-50'
+      case 'red':
+        return 'hover:bg-red-50'
+      case 'black':
+        return 'hover:bg-gray-50'
+      default:
+        return 'hover:bg-green-50'
+    }
+  }
   
   const cartItem = state.items.find(cartItem => cartItem.item.id === item.id)
   const quantity = cartItem?.quantity || 0
@@ -73,7 +91,7 @@ export function MenuItemComponent({ item, currency }: MenuItemProps) {
   }
   
   return (
-    <div className="p-4 border-b border-gray-200 hover:bg-green-50 transition-colors">
+    <div className={`p-4 border-b border-gray-200 ${getHoverColor()} transition-colors`}>
       {/* Desktop layout - flex row */}
       <div className="hidden sm:flex items-center justify-between">
         <div className="flex-1">

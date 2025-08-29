@@ -241,6 +241,7 @@ const isFormValid = (fieldValues: Record<string, string>, primaryField?: OrderFi
 
 export function CartFooter({ restaurantId, primaryField, secondaryField, currency, themeColor }: CartFooterProps) {
   const { state, clearCart } = useCart()
+  const [isMounted, setIsMounted] = useState(false)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [fieldValues, setFieldValues] = useState<Record<string, string>>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -250,8 +251,15 @@ export function CartFooter({ restaurantId, primaryField, secondaryField, currenc
   
   const themeColors = getThemeColors(themeColor)
   
+  // Set mounted state after hydration
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
+  
   // Detect mobile device
   useEffect(() => {
+    if (!isMounted) return
+    
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768)
     }
@@ -260,7 +268,7 @@ export function CartFooter({ restaurantId, primaryField, secondaryField, currenc
     window.addEventListener('resize', checkMobile)
     
     return () => window.removeEventListener('resize', checkMobile)
-  }, [])
+  }, [isMounted])
   
   const setFieldValue = useCallback((fieldName: string, value: string) => {
     setFieldValues(prev => ({ ...prev, [fieldName]: value }))
@@ -327,6 +335,11 @@ export function CartFooter({ restaurantId, primaryField, secondaryField, currenc
     setFieldValues({})
     setSubmitError(null)
   }, [])
+  
+  // Don't render anything until mounted to prevent hydration mismatch
+  if (!isMounted) {
+    return null
+  }
   
   // Only hide the cart footer if there are no items AND no dialog is open
   if (state.items.length === 0 && !isDialogOpen) {

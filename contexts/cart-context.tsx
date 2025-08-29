@@ -1,6 +1,6 @@
 'use client'
 
-import React, { createContext, useContext, useReducer, ReactNode, useEffect, useCallback } from 'react'
+import React, { createContext, useContext, useReducer, ReactNode, useEffect, useCallback, useState } from 'react'
 import { CartItem, MenuItem } from '@/types'
 
 interface CartState {
@@ -123,30 +123,43 @@ const CartContext = createContext<CartContextType | undefined>(undefined)
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(cartReducer, initialState)
+  const [isMounted, setIsMounted] = useState(false)
   
-  // Load cart from localStorage on mount
+  // Set mounted state after hydration
   useEffect(() => {
-    // We'll load the cart when setRestaurant is called instead
+    setIsMounted(true)
   }, [])
   
   // Save cart to localStorage whenever it changes, but prevent infinite loops
   useEffect(() => {
+    // Only run on client side after mounting
+    if (!isMounted) return
+    
     // Only save if we have a restaurant ID and the cart has actually changed
     if (state.restaurantId && state.items.length > 0) {
       const cartKey = `talabatak-cart-${state.restaurantId}`
       localStorage.setItem(cartKey, JSON.stringify(state))
     }
-  }, [state.restaurantId, state.items, state.total])
+  }, [state.restaurantId, state.items, state.total, isMounted])
   
   // Clean up empty carts from localStorage
   useEffect(() => {
+    // Only run on client side after mounting
+    if (!isMounted) return
+    
     if (state.restaurantId && state.items.length === 0) {
       const cartKey = `talabatak-cart-${state.restaurantId}`
       localStorage.removeItem(cartKey)
     }
-  }, [state.restaurantId, state.items.length])
+  }, [state.restaurantId, state.items.length, isMounted])
   
   const setRestaurant = useCallback((restaurantId: string) => {
+    // Only access localStorage on client side
+    if (typeof window === 'undefined') {
+      dispatch({ type: 'SET_RESTAURANT', payload: restaurantId })
+      return
+    }
+    
     // Load existing cart for this restaurant if available
     const cartKey = `talabatak-cart-${restaurantId}`
     const savedCart = localStorage.getItem(cartKey)
