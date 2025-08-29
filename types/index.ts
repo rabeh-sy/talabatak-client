@@ -35,12 +35,13 @@ export interface Restaurant {
   logo: string
   status: 'active' | 'inactive'
   view?: 'list' | 'cards'
+  required_info?: string
 }
 
 export interface BackendOrderRequest {
   order: {
     total: number
-    table_number: string
+    required_info: string
     details: Array<{
       item_id: number
       name: string

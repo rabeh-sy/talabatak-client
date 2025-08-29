@@ -12,13 +12,15 @@ import { BackendOrderRequest } from '@/types'
 
 interface CartFooterProps {
   restaurantId: string
+  requiredInfo: string
 }
 
 // Mobile Bottom Sheet Modal - moved outside to prevent re-creation
 const MobileModal = ({ 
   isOpen, 
-  tableNumber, 
-  setTableNumber, 
+  requiredInfo,
+  requiredInfoValue, 
+  setRequiredInfoValue, 
   submitError, 
   isSubmitting, 
   isSubmitted, 
@@ -26,8 +28,9 @@ const MobileModal = ({
   onClose 
 }: {
   isOpen: boolean
-  tableNumber: string
-  setTableNumber: (value: string) => void
+  requiredInfo: string
+  requiredInfoValue: string
+  setRequiredInfoValue: (value: string) => void
   submitError: string | null
   isSubmitting: boolean
   isSubmitted: boolean
@@ -62,7 +65,7 @@ const MobileModal = ({
           
           {/* Header */}
           <div className="text-center mb-6">
-            <h2 className="text-xl font-semibold text-gray-900">أدخل رقم الطاولة</h2>
+            <h2 className="text-xl font-semibold text-gray-900">أدخل {requiredInfo}</h2>
           </div>
           
           {!isSubmitted ? (
@@ -71,9 +74,9 @@ const MobileModal = ({
               <div className="mb-6">
                 <Input
                   type="text"
-                  placeholder="رقم الطاولة"
-                  value={tableNumber}
-                  onChange={(e) => setTableNumber(e.target.value)}
+                  placeholder={requiredInfo}
+                  value={requiredInfoValue}
+                  onChange={(e) => setRequiredInfoValue(e.target.value)}
                   className="text-center text-lg h-14"
                   dir="rtl"
                   autoFocus
@@ -93,7 +96,7 @@ const MobileModal = ({
               <div className="space-y-3">
                 <Button
                   onClick={onSubmit}
-                  disabled={!tableNumber.trim() || isSubmitting}
+                  disabled={!requiredInfoValue.trim() || isSubmitting}
                   className="w-full h-14 bg-primary hover:bg-primary/90 text-lg font-semibold"
                 >
                   {isSubmitting ? 'جاري الإرسال...' : 'إرسال الطلب'}
@@ -114,7 +117,7 @@ const MobileModal = ({
                 تم إرسال طلبك بنجاح!
               </h3>
               <p className="text-gray-600">
-                سيتم إحضار طلبك إلى الطاولة رقم {convertArabicDigitsToEnglish(tableNumber)}
+                سيتم إحضار طلبك إلى {requiredInfo} {convertArabicDigitsToEnglish(requiredInfoValue)}
               </p>
             </div>
           )}
@@ -124,10 +127,10 @@ const MobileModal = ({
   )
 }
 
-export function CartFooter({ restaurantId }: CartFooterProps) {
+export function CartFooter({ restaurantId, requiredInfo }: CartFooterProps) {
   const { state, clearCart } = useCart()
   const [isDialogOpen, setIsDialogOpen] = useState(false)
-  const [tableNumber, setTableNumber] = useState('')
+  const [requiredInfoValue, setRequiredInfoValue] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
@@ -146,19 +149,19 @@ export function CartFooter({ restaurantId }: CartFooterProps) {
   }, [])
   
   const handleSubmitOrder = useCallback(async () => {
-    if (!tableNumber.trim()) return
+    if (!requiredInfoValue.trim()) return
     
     setIsSubmitting(true)
     setSubmitError(null)
     
     try {
       // Convert Arabic digits to English digits before sending to backend
-      const convertedTableNumber = convertArabicDigitsToEnglish(tableNumber.trim())
+      const convertedRequiredInfoValue = convertArabicDigitsToEnglish(requiredInfoValue.trim())
       
       const orderData: BackendOrderRequest = {
         order: {
           total: state.total,
-          table_number: convertedTableNumber,
+          required_info: convertedRequiredInfoValue,
           details: state.items.map(cartItem => ({
             item_id: cartItem.item.id,
             name: cartItem.item.name,
@@ -176,7 +179,7 @@ export function CartFooter({ restaurantId }: CartFooterProps) {
       setTimeout(() => {
         setIsDialogOpen(false)
         setIsSubmitted(false)
-        setTableNumber('')
+        setRequiredInfoValue('')
       }, 2000)
       
     } catch (error) {
@@ -185,11 +188,11 @@ export function CartFooter({ restaurantId }: CartFooterProps) {
     } finally {
       setIsSubmitting(false)
     }
-  }, [tableNumber, state.total, state.items, restaurantId, clearCart])
+  }, [requiredInfoValue, state.total, state.items, restaurantId, clearCart])
 
   const closeDialog = useCallback(() => {
     setIsDialogOpen(false)
-    setTableNumber('')
+    setRequiredInfoValue('')
     setSubmitError(null)
   }, [])
   
@@ -224,8 +227,9 @@ export function CartFooter({ restaurantId }: CartFooterProps) {
       {isMobile ? (
         <MobileModal
           isOpen={isDialogOpen}
-          tableNumber={tableNumber}
-          setTableNumber={setTableNumber}
+          requiredInfo={requiredInfo}
+          requiredInfoValue={requiredInfoValue}
+          setRequiredInfoValue={setRequiredInfoValue}
           submitError={submitError}
           isSubmitting={isSubmitting}
           isSubmitted={isSubmitted}
@@ -236,7 +240,7 @@ export function CartFooter({ restaurantId }: CartFooterProps) {
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogContent className="sm:max-w-md">
             <DialogHeader>
-              <DialogTitle className="text-right">أدخل رقم الطاولة</DialogTitle>
+              <DialogTitle className="text-right">أدخل {requiredInfo}</DialogTitle>
             </DialogHeader>
             
             {!isSubmitted ? (
@@ -244,9 +248,9 @@ export function CartFooter({ restaurantId }: CartFooterProps) {
                 <div className="py-4">
                   <Input
                     type="text"
-                    placeholder="رقم الطاولة"
-                    value={tableNumber}
-                    onChange={(e) => setTableNumber(e.target.value)}
+                    placeholder={requiredInfo}
+                    value={requiredInfoValue}
+                    onChange={(e) => setRequiredInfoValue(e.target.value)}
                     className="text-center text-lg"
                     dir="rtl"
                     pattern="[0-9٠١٢٣٤٥٦٧٨٩]*"
@@ -269,7 +273,7 @@ export function CartFooter({ restaurantId }: CartFooterProps) {
                   </Button>
                   <Button
                     onClick={handleSubmitOrder}
-                    disabled={!tableNumber.trim() || isSubmitting}
+                    disabled={!requiredInfoValue.trim() || isSubmitting}
                     className="w-full sm:w-auto bg-primary hover:bg-primary/90"
                   >
                     {isSubmitting ? 'جاري الإرسال...' : 'إرسال الطلب'}
@@ -283,7 +287,7 @@ export function CartFooter({ restaurantId }: CartFooterProps) {
                   تم إرسال طلبك بنجاح!
                 </h3>
                 <p className="text-gray-600">
-                  سيتم إحضار طلبك إلى الطاولة رقم {convertArabicDigitsToEnglish(tableNumber)}
+                  سيتم إحضار طلبك إلى {requiredInfo} {convertArabicDigitsToEnglish(requiredInfoValue)}
                 </p>
               </div>
             )}

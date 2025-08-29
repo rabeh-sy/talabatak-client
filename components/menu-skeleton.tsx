@@ -1,5 +1,5 @@
 import React from 'react'
-import { Utensils } from 'lucide-react'
+import { Menu } from 'lucide-react'
 
 export function MenuSkeleton() {
   return (
@@ -8,7 +8,7 @@ export function MenuSkeleton() {
         {/* Loading Icon */}
         <div className="mb-6">
           <div className="relative">
-            <Utensils className="h-20 w-20 text-primary mx-auto animate-pulse" />
+            <Menu className="h-20 w-20 text-primary mx-auto animate-pulse" />
             {/* Subtle glow effect */}
             <div className="absolute inset-0 bg-primary/20 rounded-full blur-xl animate-pulse"></div>
           </div>
