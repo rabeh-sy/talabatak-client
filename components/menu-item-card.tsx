@@ -54,9 +54,9 @@ export function MenuItemCard({ item, currency }: MenuItemCardProps) {
   
   if (!item.available) {
     return (
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden opacity-50">
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden opacity-50 flex flex-col">
         {/* Image */}
-        <div className="relative h-48 bg-gray-100">
+        <div className="relative h-48 bg-gray-100 flex-shrink-0">
           {item.image_url ? (
             <Image
               src={item.image_url}
@@ -75,10 +75,13 @@ export function MenuItemCard({ item, currency }: MenuItemCardProps) {
         </div>
         
         {/* Content */}
-        <div className="p-4">
-          <h3 className="text-lg font-semibold text-gray-400 mb-2">{item.name}</h3>
-          <p className="text-sm text-gray-400 mb-3 line-clamp-2">{item.description}</p>
-          <div className="flex items-center justify-between">
+        <div className="p-4 flex flex-col flex-1">
+          <div className="flex-1">
+            <h3 className="text-lg font-semibold text-gray-400 mb-2">{item.name}</h3>
+            <p className="text-sm text-gray-400 mb-3 line-clamp-2">{item.description}</p>
+          </div>
+          
+          <div className="flex items-center justify-between pt-2 mt-auto">
             <span className="text-lg font-semibold text-gray-400">{formatPrice(item.price)} {currency}</span>
           </div>
         </div>
