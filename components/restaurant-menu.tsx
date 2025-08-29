@@ -85,7 +85,11 @@ export function RestaurantMenu({ restaurant, categories, restaurantId }: Restaur
         </div>
         
         {/* Cart Footer */}
-        <CartFooter restaurantId={restaurantId} requiredInfo={restaurant.required_info || 'رقم الطاولة'} />
+        <CartFooter 
+          restaurantId={restaurantId} 
+          primaryField={restaurant.primary_field}
+          secondaryField={restaurant.secondary_field}
+        />
         
         {/* Bottom padding to account for sticky footer */}
         <div className="h-24" />

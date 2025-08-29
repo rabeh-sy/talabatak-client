@@ -36,14 +36,39 @@ export const fetchRestaurantInfo = async (restaurantId: string): Promise<Restaur
       throw new Error(`HTTP error! status: ${response.status}`)
     }
     
-    const data: { id?: string; name?: string; logo?: string; status?: 'active' | 'inactive'; view?: 'list' | 'cards'; required_info?: string } = await response.json()
+    const data: { 
+      id?: string; 
+      name?: string; 
+      logo?: string; 
+      status?: 'active' | 'inactive'; 
+      view?: 'list' | 'cards';
+      view_mode?: 'list' | 'cards';
+      primary_field?: {
+        name: string;
+        label: string;
+        type: 'number' | 'string';
+        placeholder: string;
+        shown: boolean;
+        required: boolean;
+      };
+      secondary_field?: {
+        name: string;
+        label: string;
+        type: 'number' | 'string';
+        placeholder: string;
+        shown: boolean;
+        required: boolean;
+      };
+    } = await response.json()
+    
     return {
       id: data.id || restaurantId,
       name: data.name || 'مطعم',
       logo: data.logo || '/api/logo',
       status: data.status || 'active',
-      view: data.view || 'list',
-      required_info: data.required_info || 'رقم الطاولة'
+      view: data.view_mode || data.view || 'list',
+      primary_field: data.primary_field,
+      secondary_field: data.secondary_field
     }
   } catch (err) {
     if (err instanceof Error && err.message === 'Restaurant not found') {

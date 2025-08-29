@@ -8,19 +8,21 @@ import { ShoppingCart, Check, X } from 'lucide-react'
 import { useCart } from '@/contexts/cart-context'
 import { submitOrder, formatPrice } from '@/lib/api'
 import { convertArabicDigitsToEnglish } from '@/lib/utils'
-import { BackendOrderRequest } from '@/types'
+import { BackendOrderRequest, OrderField } from '@/types'
 
 interface CartFooterProps {
   restaurantId: string
-  requiredInfo: string
+  primaryField?: OrderField
+  secondaryField?: OrderField
 }
 
-// Mobile Bottom Sheet Modal - moved outside to prevent re-creation
+// Mobile Bottom Sheet Modal
 const MobileModal = ({ 
   isOpen, 
-  requiredInfo,
-  requiredInfoValue, 
-  setRequiredInfoValue, 
+  primaryField,
+  secondaryField,
+  fieldValues,
+  setFieldValue,
   submitError, 
   isSubmitting, 
   isSubmitted, 
@@ -28,9 +30,10 @@ const MobileModal = ({
   onClose 
 }: {
   isOpen: boolean
-  requiredInfo: string
-  requiredInfoValue: string
-  setRequiredInfoValue: (value: string) => void
+  primaryField?: OrderField
+  secondaryField?: OrderField
+  fieldValues: Record<string, string>
+  setFieldValue: (fieldName: string, value: string) => void
   submitError: string | null
   isSubmitting: boolean
   isSubmitted: boolean
@@ -65,25 +68,49 @@ const MobileModal = ({
           
           {/* Header */}
           <div className="text-center mb-6">
-            <h2 className="text-xl font-semibold text-gray-900">أدخل {requiredInfo}</h2>
+            <h2 className="text-xl font-semibold text-gray-900">أدخل معلومات الطلب</h2>
           </div>
           
           {!isSubmitted ? (
             <>
-              {/* Input */}
-              <div className="mb-6">
-                <Input
-                  type="text"
-                  placeholder={requiredInfo}
-                  value={requiredInfoValue}
-                  onChange={(e) => setRequiredInfoValue(e.target.value)}
-                  className="text-center text-lg h-14"
-                  dir="rtl"
-                  autoFocus
-                  inputMode="numeric"
-                  pattern="[0-9٠١٢٣٤٥٦٧٨٩]*"
-                />
-              </div>
+              {/* Primary Field */}
+              {primaryField?.shown && (
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-2 text-right">
+                    {primaryField.label}
+                    {primaryField.required && <span className="text-red-500 mr-1">*</span>}
+                  </label>
+                  <Input
+                    type={primaryField.type === 'number' ? 'number' : 'text'}
+                    placeholder={primaryField.placeholder}
+                    value={fieldValues[primaryField.name] || ''}
+                    onChange={(e) => setFieldValue(primaryField.name, e.target.value)}
+                    className="text-center text-lg h-14"
+                    dir="rtl"
+                    autoFocus
+                    inputMode={primaryField.type === 'number' ? 'numeric' : 'text'}
+                    pattern={primaryField.type === 'number' ? '[0-9٠١٢٣٤٥٦٧٨٩]*' : undefined}
+                  />
+                </div>
+              )}
+              
+              {/* Secondary Field */}
+              {secondaryField?.shown && (
+                <div className="mb-6">
+                  <label className="block text-sm font-medium text-gray-700 mb-2 text-right">
+                    {secondaryField.label}
+                    {secondaryField.required && <span className="text-red-500 mr-1">*</span>}
+                  </label>
+                  <Input
+                    type="text"
+                    placeholder={secondaryField.placeholder}
+                    value={fieldValues[secondaryField.name] || ''}
+                    onChange={(e) => setFieldValue(secondaryField.name, e.target.value)}
+                    className="text-center text-lg h-14"
+                    dir="rtl"
+                  />
+                </div>
+              )}
               
               {/* Error message */}
               {submitError && (
@@ -96,7 +123,7 @@ const MobileModal = ({
               <div className="space-y-3">
                 <Button
                   onClick={onSubmit}
-                  disabled={!requiredInfoValue.trim() || isSubmitting}
+                  disabled={!isFormValid(fieldValues, primaryField, secondaryField) || isSubmitting}
                   className="w-full h-14 bg-primary hover:bg-primary/90 text-lg font-semibold"
                 >
                   {isSubmitting ? 'جاري الإرسال...' : 'إرسال الطلب'}
@@ -117,7 +144,7 @@ const MobileModal = ({
                 تم إرسال طلبك بنجاح!
               </h3>
               <p className="text-gray-600">
-                سيتم إحضار طلبك إلى {requiredInfo} {convertArabicDigitsToEnglish(requiredInfoValue)}
+                سيتم معالجة طلبك قريباً
               </p>
             </div>
           )}
@@ -127,10 +154,21 @@ const MobileModal = ({
   )
 }
 
-export function CartFooter({ restaurantId, requiredInfo }: CartFooterProps) {
+// Helper function to validate form
+const isFormValid = (fieldValues: Record<string, string>, primaryField?: OrderField, secondaryField?: OrderField): boolean => {
+  if (primaryField?.required && (!fieldValues[primaryField.name] || fieldValues[primaryField.name].trim() === '')) {
+    return false
+  }
+  if (secondaryField?.required && (!fieldValues[secondaryField.name] || fieldValues[secondaryField.name].trim() === '')) {
+    return false
+  }
+  return true
+}
+
+export function CartFooter({ restaurantId, primaryField, secondaryField }: CartFooterProps) {
   const { state, clearCart } = useCart()
   const [isDialogOpen, setIsDialogOpen] = useState(false)
-  const [requiredInfoValue, setRequiredInfoValue] = useState('')
+  const [fieldValues, setFieldValues] = useState<Record<string, string>>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
@@ -148,20 +186,38 @@ export function CartFooter({ restaurantId, requiredInfo }: CartFooterProps) {
     return () => window.removeEventListener('resize', checkMobile)
   }, [])
   
+  const setFieldValue = useCallback((fieldName: string, value: string) => {
+    setFieldValues(prev => ({ ...prev, [fieldName]: value }))
+  }, [])
+  
   const handleSubmitOrder = useCallback(async () => {
-    if (!requiredInfoValue.trim()) return
+    if (!isFormValid(fieldValues, primaryField, secondaryField)) return
     
     setIsSubmitting(true)
     setSubmitError(null)
     
     try {
-      // Convert Arabic digits to English digits before sending to backend
-      const convertedRequiredInfoValue = convertArabicDigitsToEnglish(requiredInfoValue.trim())
+      // Convert Arabic digits to English digits for number fields
+      const processedFields: Record<string, string> = {}
+      
+      if (primaryField?.shown) {
+        const value = fieldValues[primaryField.name] || ''
+        processedFields[primaryField.name] = primaryField.type === 'number' 
+          ? convertArabicDigitsToEnglish(value.trim())
+          : value.trim()
+      }
+      
+      if (secondaryField?.shown) {
+        const value = fieldValues[secondaryField.name] || ''
+        processedFields[secondaryField.name] = secondaryField.type === 'number' 
+          ? convertArabicDigitsToEnglish(value.trim())
+          : value.trim()
+      }
       
       const orderData: BackendOrderRequest = {
         order: {
           total: state.total,
-          required_info: convertedRequiredInfoValue,
+          fields: processedFields,
           details: state.items.map(cartItem => ({
             item_id: cartItem.item.id,
             name: cartItem.item.name,
@@ -179,7 +235,7 @@ export function CartFooter({ restaurantId, requiredInfo }: CartFooterProps) {
       setTimeout(() => {
         setIsDialogOpen(false)
         setIsSubmitted(false)
-        setRequiredInfoValue('')
+        setFieldValues({})
       }, 2000)
       
     } catch (error) {
@@ -188,11 +244,11 @@ export function CartFooter({ restaurantId, requiredInfo }: CartFooterProps) {
     } finally {
       setIsSubmitting(false)
     }
-  }, [requiredInfoValue, state.total, state.items, restaurantId, clearCart])
+  }, [fieldValues, state.total, state.items, restaurantId, clearCart, primaryField, secondaryField])
 
   const closeDialog = useCallback(() => {
     setIsDialogOpen(false)
-    setRequiredInfoValue('')
+    setFieldValues({})
     setSubmitError(null)
   }, [])
   
@@ -227,9 +283,10 @@ export function CartFooter({ restaurantId, requiredInfo }: CartFooterProps) {
       {isMobile ? (
         <MobileModal
           isOpen={isDialogOpen}
-          requiredInfo={requiredInfo}
-          requiredInfoValue={requiredInfoValue}
-          setRequiredInfoValue={setRequiredInfoValue}
+          primaryField={primaryField}
+          secondaryField={secondaryField}
+          fieldValues={fieldValues}
+          setFieldValue={setFieldValue}
           submitError={submitError}
           isSubmitting={isSubmitting}
           isSubmitted={isSubmitted}
@@ -240,22 +297,47 @@ export function CartFooter({ restaurantId, requiredInfo }: CartFooterProps) {
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogContent className="sm:max-w-md">
             <DialogHeader>
-              <DialogTitle className="text-right">أدخل {requiredInfo}</DialogTitle>
+              <DialogTitle className="text-right">أدخل معلومات الطلب</DialogTitle>
             </DialogHeader>
             
             {!isSubmitted ? (
               <>
-                <div className="py-4">
-                  <Input
-                    type="text"
-                    placeholder={requiredInfo}
-                    value={requiredInfoValue}
-                    onChange={(e) => setRequiredInfoValue(e.target.value)}
-                    className="text-center text-lg"
-                    dir="rtl"
-                    pattern="[0-9٠١٢٣٤٥٦٧٨٩]*"
-                  />
-                </div>
+                {/* Primary Field */}
+                {primaryField?.shown && (
+                  <div className="py-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-2 text-right">
+                      {primaryField.label}
+                      {primaryField.required && <span className="text-red-500 mr-1">*</span>}
+                    </label>
+                    <Input
+                      type={primaryField.type === 'number' ? 'number' : 'text'}
+                      placeholder={primaryField.placeholder}
+                      value={fieldValues[primaryField.name] || ''}
+                      onChange={(e) => setFieldValue(primaryField.name, e.target.value)}
+                      className="text-center text-lg"
+                      dir="rtl"
+                      pattern={primaryField.type === 'number' ? '[0-9٠١٢٣٤٥٦٧٨٩]*' : undefined}
+                    />
+                  </div>
+                )}
+                
+                {/* Secondary Field */}
+                {secondaryField?.shown && (
+                  <div className="py-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-2 text-right">
+                      {secondaryField.label}
+                      {secondaryField.required && <span className="text-red-500 mr-1">*</span>}
+                    </label>
+                    <Input
+                      type="text"
+                      placeholder={secondaryField.placeholder}
+                      value={fieldValues[secondaryField.name] || ''}
+                      onChange={(e) => setFieldValue(secondaryField.name, e.target.value)}
+                      className="text-center text-lg"
+                      dir="rtl"
+                    />
+                  </div>
+                )}
                 
                 {submitError && (
                   <div className="mt-3 text-sm text-red-600 text-center">
@@ -273,7 +355,7 @@ export function CartFooter({ restaurantId, requiredInfo }: CartFooterProps) {
                   </Button>
                   <Button
                     onClick={handleSubmitOrder}
-                    disabled={!requiredInfoValue.trim() || isSubmitting}
+                    disabled={!isFormValid(fieldValues, primaryField, secondaryField) || isSubmitting}
                     className="w-full sm:w-auto bg-primary hover:bg-primary/90"
                   >
                     {isSubmitting ? 'جاري الإرسال...' : 'إرسال الطلب'}
@@ -287,7 +369,7 @@ export function CartFooter({ restaurantId, requiredInfo }: CartFooterProps) {
                   تم إرسال طلبك بنجاح!
                 </h3>
                 <p className="text-gray-600">
-                  سيتم إحضار طلبك إلى {requiredInfo} {convertArabicDigitsToEnglish(requiredInfoValue)}
+                  سيتم معالجة طلبك قريباً
                 </p>
               </div>
             )}

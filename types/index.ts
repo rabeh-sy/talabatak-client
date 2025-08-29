@@ -29,19 +29,30 @@ export interface Order {
   createdAt: string
 }
 
+export interface OrderField {
+  name: string
+  label: string
+  type: 'number' | 'string'
+  placeholder: string
+  shown: boolean
+  required: boolean
+}
+
 export interface Restaurant {
   id: string
   name: string
   logo: string
   status: 'active' | 'inactive'
   view?: 'list' | 'cards'
-  required_info?: string
+  view_mode?: 'list' | 'cards'
+  primary_field?: OrderField
+  secondary_field?: OrderField
 }
 
 export interface BackendOrderRequest {
   order: {
     total: number
-    required_info: string
+    fields: Record<string, string>
     details: Array<{
       item_id: number
       name: string
