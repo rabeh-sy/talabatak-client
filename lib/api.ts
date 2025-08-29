@@ -1,6 +1,6 @@
 import { Restaurant, MenuItem, BackendOrderRequest } from '@/types'
 
-const API_BASE_URL = 'https://qr-service.rabeh.sy/api/v1'
+const API_BASE_URL = 'http://localhost:3000/api/v1'
 
 // Helper function to format prices with commas
 export const formatPrice = (price: number): string => {
@@ -36,12 +36,13 @@ export const fetchRestaurantInfo = async (restaurantId: string): Promise<Restaur
       throw new Error(`HTTP error! status: ${response.status}`)
     }
     
-    const data: { id?: string; name?: string; logo?: string; status?: 'active' | 'inactive' } = await response.json()
+    const data: { id?: string; name?: string; logo?: string; status?: 'active' | 'inactive'; view?: 'list' | 'cards' } = await response.json()
     return {
       id: data.id || restaurantId,
       name: data.name || 'مطعم',
       logo: data.logo || '/api/logo',
-      status: data.status || 'active'
+      status: data.status || 'active',
+      view: data.view || 'list'
     }
   } catch (err) {
     if (err instanceof Error && err.message === 'Restaurant not found') {
@@ -62,7 +63,7 @@ export const fetchMenuItems = async (restaurantId: string): Promise<MenuItem[]> 
       throw new Error(`HTTP error! status: ${response.status}`)
     }
     
-    const data: { menu_items?: Array<Partial<MenuItem> & { id: number; name: string; price: number; category?: string; available?: boolean; image?: string; description?: string }> } = await response.json()
+    const data: { menu_items?: Array<Partial<MenuItem> & { id: number; name: string; price: number; category?: string; available?: boolean; image?: string; image_url?: string; description?: string }> } = await response.json()
     
     if (!data.menu_items || !Array.isArray(data.menu_items)) {
       throw new Error('Invalid menu data received')
@@ -75,6 +76,7 @@ export const fetchMenuItems = async (restaurantId: string): Promise<MenuItem[]> 
       price: item.price,
       category: item.category || 'أخرى',
       image: item.image,
+      image_url: item.image_url,
       available: item.available !== false
     }))
   } catch (err) {

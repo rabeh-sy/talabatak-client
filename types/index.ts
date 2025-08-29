@@ -5,6 +5,7 @@ export interface MenuItem {
   price: number
   category: string
   image?: string
+  image_url?: string
   available: boolean
 }
 
@@ -33,6 +34,7 @@ export interface Restaurant {
   name: string
   logo: string
   status: 'active' | 'inactive'
+  view?: 'list' | 'cards'
 }
 
 export interface BackendOrderRequest {
