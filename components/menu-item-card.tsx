@@ -6,14 +6,18 @@ import { MenuItem } from '@/types'
 import { Button } from '@/components/ui/button'
 import { Plus, Minus } from 'lucide-react'
 import { useCart } from '@/contexts/cart-context'
+import { useTheme } from '@/contexts/theme-context'
 import { formatPrice } from '@/lib/api'
 
 interface MenuItemCardProps {
   item: MenuItem
+  currency: string
 }
 
-export function MenuItemCard({ item }: MenuItemCardProps) {
+export function MenuItemCard({ item, currency }: MenuItemCardProps) {
   const { state, addItem, updateQuantity } = useCart()
+  const { getButtonColors } = useTheme()
+  const buttonColors = getButtonColors()
   
   const cartItem = state.items.find(cartItem => cartItem.item.id === item.id)
   const quantity = cartItem?.quantity || 0
@@ -57,7 +61,7 @@ export function MenuItemCard({ item }: MenuItemCardProps) {
           <h3 className="text-lg font-semibold text-gray-400 mb-2">{item.name}</h3>
           <p className="text-sm text-gray-400 mb-3 line-clamp-2">{item.description}</p>
           <div className="flex items-center justify-between">
-            <span className="text-lg font-semibold text-gray-400">{formatPrice(item.price)} ل.س</span>
+            <span className="text-lg font-semibold text-gray-400">{formatPrice(item.price)} {currency}</span>
           </div>
         </div>
       </div>
@@ -88,13 +92,13 @@ export function MenuItemCard({ item }: MenuItemCardProps) {
         <p className="text-sm text-gray-600 mb-3 line-clamp-2">{item.description}</p>
         
         <div className="flex items-center justify-between">
-          <span className="text-lg font-semibold text-primary">{formatPrice(item.price)} ل.س</span>
+          <span className="text-lg font-semibold text-primary">{formatPrice(item.price)} {currency}</span>
           
           {quantity === 0 ? (
             <Button
               onClick={handleAdd}
               size="sm"
-              className="bg-primary hover:bg-primary/90 text-white"
+              className={`${buttonColors.primary} text-white`}
             >
               <Plus className="h-4 w-4 ml-1" />
               إضافة

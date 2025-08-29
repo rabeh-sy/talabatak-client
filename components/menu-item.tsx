@@ -5,14 +5,18 @@ import { MenuItem } from '@/types'
 import { Button } from '@/components/ui/button'
 import { Plus, Minus } from 'lucide-react'
 import { useCart } from '@/contexts/cart-context'
+import { useTheme } from '@/contexts/theme-context'
 import { formatPrice } from '@/lib/api'
 
 interface MenuItemProps {
   item: MenuItem
+  currency: string
 }
 
-export function MenuItemComponent({ item }: MenuItemProps) {
+export function MenuItemComponent({ item, currency }: MenuItemProps) {
   const { state, addItem, updateQuantity } = useCart()
+  const { getButtonColors } = useTheme()
+  const buttonColors = getButtonColors()
   
   const cartItem = state.items.find(cartItem => cartItem.item.id === item.id)
   const quantity = cartItem?.quantity || 0
@@ -39,7 +43,7 @@ export function MenuItemComponent({ item }: MenuItemProps) {
             <p className="text-sm text-gray-400">{item.description}</p>
           </div>
           <div className="text-right">
-            <span className="text-lg font-semibold text-gray-400">{formatPrice(item.price)} ل.س</span>
+            <span className="text-lg font-semibold text-gray-400">{formatPrice(item.price)} {currency}</span>
             <div className="text-xs text-gray-400 mt-1">غير متوفر</div>
           </div>
         </div>
@@ -60,7 +64,7 @@ export function MenuItemComponent({ item }: MenuItemProps) {
           {/* Price on separate line for mobile */}
           <div className="text-right">
             <span className="text-lg font-semibold text-gray-400">
-              {formatPrice(item.price)} ل.س
+              {formatPrice(item.price)} {currency}
             </span>
           </div>
         </div>
@@ -79,14 +83,14 @@ export function MenuItemComponent({ item }: MenuItemProps) {
         
         <div className="flex items-center space-x-3">
           <span className="text-lg font-semibold text-primary min-w-[60px] text-left">
-            {formatPrice(item.price)} ل.س
+            {formatPrice(item.price)} {currency}
           </span>
           
           {quantity === 0 ? (
             <Button
               onClick={handleAdd}
               size="sm"
-              className="bg-primary hover:bg-primary/90 text-white"
+              className={`${buttonColors.primary} text-white`}
             >
               <Plus className="h-4 w-4 ml-1" />
               إضافة
@@ -132,7 +136,7 @@ export function MenuItemComponent({ item }: MenuItemProps) {
               <Button
                 onClick={handleAdd}
                 size="sm"
-                className="bg-primary hover:bg-primary/90 text-white"
+                className={`${buttonColors.primary} text-white`}
               >
                 <Plus className="h-4 w-4 ml-1" />
                 إضافة
@@ -168,7 +172,7 @@ export function MenuItemComponent({ item }: MenuItemProps) {
         {/* Price on separate line for mobile */}
         <div className="text-right">
           <span className="text-lg font-semibold text-primary">
-            {formatPrice(item.price)} ل.س
+            {formatPrice(item.price)} {currency}
           </span>
         </div>
       </div>

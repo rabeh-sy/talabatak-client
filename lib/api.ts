@@ -41,6 +41,7 @@ export const fetchRestaurantInfo = async (restaurantId: string): Promise<Restaur
       name?: string; 
       logo?: string; 
       status?: 'active' | 'inactive'; 
+      view?: 'list' | 'cards';
       view_mode?: 'list' | 'cards';
       primary_field?: {
         name: string;
@@ -58,6 +59,8 @@ export const fetchRestaurantInfo = async (restaurantId: string): Promise<Restaur
         shown: boolean;
         required: boolean;
       };
+      currency?: string;
+      theme_color?: 'green' | 'yellow' | 'blue' | 'red' | 'black';
     } = await response.json()
     
     return {
@@ -67,7 +70,9 @@ export const fetchRestaurantInfo = async (restaurantId: string): Promise<Restaur
       status: data.status || 'active',
       view_mode: data.view_mode || 'list',
       primary_field: data.primary_field,
-      secondary_field: data.secondary_field
+      secondary_field: data.secondary_field,
+      currency: data.currency || 'ل.س',
+      theme_color: data.theme_color || 'green'
     }
   } catch (err) {
     if (err instanceof Error && err.message === 'Restaurant not found') {

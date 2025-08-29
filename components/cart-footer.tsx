@@ -14,6 +14,80 @@ interface CartFooterProps {
   restaurantId: string
   primaryField?: OrderField
   secondaryField?: OrderField
+  currency: string
+  themeColor: 'green' | 'yellow' | 'blue' | 'red' | 'black'
+}
+
+// Helper function to get theme colors
+const getThemeColors = (themeColor: 'green' | 'yellow' | 'blue' | 'red' | 'black') => {
+  switch (themeColor) {
+    case 'green':
+      return {
+        primary: 'bg-primary',
+        primaryHover: 'hover:bg-primary/90',
+        secondary: 'bg-secondary',
+        secondaryHover: 'hover:bg-secondary/90',
+        textSecondary: 'text-secondary',
+        bgSecondary: 'bg-secondary',
+        buttonPrimary: 'bg-primary hover:bg-primary/90',
+        buttonSecondary: 'bg-secondary hover:bg-secondary/90'
+      }
+    case 'yellow':
+      return {
+        primary: 'bg-yellow-600',
+        primaryHover: 'hover:bg-yellow-700',
+        secondary: 'bg-yellow-100',
+        secondaryHover: 'hover:bg-yellow-200',
+        textSecondary: 'text-secondary',
+        bgSecondary: 'bg-yellow-100',
+        buttonPrimary: 'bg-yellow-600 hover:bg-yellow-700',
+        buttonSecondary: 'bg-yellow-100 hover:bg-yellow-200'
+      }
+    case 'blue':
+      return {
+        primary: 'bg-blue-600',
+        primaryHover: 'hover:bg-blue-700',
+        secondary: 'bg-blue-100',
+        secondaryHover: 'hover:bg-blue-200',
+        textSecondary: 'text-secondary',
+        bgSecondary: 'bg-blue-100',
+        buttonPrimary: 'bg-blue-600 hover:bg-blue-700',
+        buttonSecondary: 'bg-blue-100 hover:bg-blue-200'
+      }
+    case 'red':
+      return {
+        primary: 'bg-red-800',
+        primaryHover: 'hover:bg-red-900',
+        secondary: 'bg-red-100',
+        secondaryHover: 'hover:bg-red-200',
+        textSecondary: 'text-secondary',
+        bgSecondary: 'bg-red-100',
+        buttonPrimary: 'bg-red-800 hover:bg-red-900',
+        buttonSecondary: 'bg-red-100 hover:bg-red-200'
+      }
+    case 'black':
+      return {
+        primary: 'bg-gray-800',
+        primaryHover: 'hover:bg-gray-900',
+        secondary: 'bg-gray-200',
+        secondaryHover: 'hover:bg-gray-300',
+        textSecondary: 'text-secondary',
+        bgSecondary: 'bg-gray-200',
+        buttonPrimary: 'bg-gray-800 hover:bg-gray-900',
+        buttonSecondary: 'bg-gray-200 hover:bg-gray-300'
+      }
+    default:
+      return {
+        primary: 'bg-primary',
+        primaryHover: 'hover:bg-primary/90',
+        secondary: 'bg-secondary',
+        secondaryHover: 'hover:bg-secondary/90',
+        textSecondary: 'text-secondary',
+        bgSecondary: 'bg-secondary',
+        buttonPrimary: 'bg-primary hover:bg-primary/90',
+        buttonSecondary: 'bg-secondary hover:bg-secondary/90'
+      }
+  }
 }
 
 // Mobile Bottom Sheet Modal
@@ -165,7 +239,7 @@ const isFormValid = (fieldValues: Record<string, string>, primaryField?: OrderFi
   return true
 }
 
-export function CartFooter({ restaurantId, primaryField, secondaryField }: CartFooterProps) {
+export function CartFooter({ restaurantId, primaryField, secondaryField, currency, themeColor }: CartFooterProps) {
   const { state, clearCart } = useCart()
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [fieldValues, setFieldValues] = useState<Record<string, string>>({})
@@ -173,6 +247,8 @@ export function CartFooter({ restaurantId, primaryField, secondaryField }: CartF
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [isMobile, setIsMobile] = useState(false)
+  
+  const themeColors = getThemeColors(themeColor)
   
   // Detect mobile device
   useEffect(() => {
@@ -260,19 +336,19 @@ export function CartFooter({ restaurantId, primaryField, secondaryField }: CartF
   return (
     <>
       {/* Sticky Footer */}
-      <div className="fixed bottom-0 left-0 right-0 bg-primary border-t border-primary/20 p-4 shadow-lg z-50">
+      <div className={`fixed bottom-0 left-0 right-0 ${themeColors.primary} border-t border-opacity-20 p-4 shadow-lg z-50`}>
         <div className="flex items-center justify-between max-w-md mx-auto">
           <div className="flex items-center space-x-3">
-            <ShoppingCart className="h-6 w-6 text-secondary" />
+            <ShoppingCart className={`h-6 w-6 ${themeColors.textSecondary}`} />
             <div>
               <div className="text-sm text-gray-300">المجموع</div>
-              <div className="text-lg font-bold text-secondary">{formatPrice(state.total)} ل.س</div>
+              <div className={`text-lg font-bold ${themeColors.textSecondary}`}>{formatPrice(state.total)} {currency}</div>
             </div>
           </div>
           
           <Button
             onClick={() => setIsDialogOpen(true)}
-            className="bg-secondary hover:bg-secondary/90 text-gray-900 font-semibold px-6"
+            className={`${themeColors.buttonSecondary} text-gray-900 font-semibold px-6`}
           >
             إتمام الطلب
           </Button>
@@ -356,7 +432,7 @@ export function CartFooter({ restaurantId, primaryField, secondaryField }: CartF
                   <Button
                     onClick={handleSubmitOrder}
                     disabled={!isFormValid(fieldValues, primaryField, secondaryField) || isSubmitting}
-                    className="w-full sm:w-auto bg-primary hover:bg-primary/90"
+                    className={`w-full sm:w-auto ${themeColors.buttonPrimary}`}
                   >
                     {isSubmitting ? 'جاري الإرسال...' : 'إرسال الطلب'}
                   </Button>

@@ -46,6 +46,8 @@ export interface Restaurant {
   view_mode?: 'list' | 'cards'
   primary_field?: OrderField
   secondary_field?: OrderField
+  currency?: string
+  theme_color?: 'green' | 'yellow' | 'blue' | 'red' | 'black'
 }
 
 export interface BackendOrderRequest {
