@@ -66,7 +66,7 @@ export function MenuItemCard({ item, currency }: MenuItemCardProps) {
             />
           ) : (
             <div className="flex items-center justify-center h-full">
-              <div className="text-gray-400 text-4xl">🍽️</div>
+              <div className="text-gray-400 text-4xl">📦</div>
             </div>
           )}
           <div className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded">
@@ -102,7 +102,7 @@ export function MenuItemCard({ item, currency }: MenuItemCardProps) {
           />
         ) : (
           <div className="flex items-center justify-center h-full">
-            <div className="text-gray-400 text-4xl">🍽️</div>
+            <div className="text-gray-400 text-4xl">📦</div>
           </div>
         )}
       </div>
