@@ -43,7 +43,6 @@ export interface Restaurant {
   name: string
   logo: string
   status: 'active' | 'inactive'
-  view?: 'list' | 'cards'
   view_mode?: 'list' | 'cards'
   primary_field?: OrderField
   secondary_field?: OrderField

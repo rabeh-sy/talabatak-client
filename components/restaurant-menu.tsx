@@ -15,7 +15,7 @@ interface RestaurantMenuProps {
 }
 
 export function RestaurantMenu({ restaurant, categories, restaurantId }: RestaurantMenuProps) {
-  const viewMode = restaurant.view || 'list'
+  const viewMode = restaurant.view_mode || 'list'
 
   return (
     <CartProvider>

@@ -41,7 +41,6 @@ export const fetchRestaurantInfo = async (restaurantId: string): Promise<Restaur
       name?: string; 
       logo?: string; 
       status?: 'active' | 'inactive'; 
-      view?: 'list' | 'cards';
       view_mode?: 'list' | 'cards';
       primary_field?: {
         name: string;
@@ -66,7 +65,7 @@ export const fetchRestaurantInfo = async (restaurantId: string): Promise<Restaur
       name: data.name || 'مطعم',
       logo: data.logo || '/api/logo',
       status: data.status || 'active',
-      view: data.view_mode || data.view || 'list',
+      view_mode: data.view_mode || 'list',
       primary_field: data.primary_field,
       secondary_field: data.secondary_field
     }
