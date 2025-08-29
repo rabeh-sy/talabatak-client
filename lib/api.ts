@@ -1,6 +1,6 @@
 import { Restaurant, MenuItem, BackendOrderRequest } from '@/types'
 
-const API_BASE_URL = 'http://localhost:3000/api/v1'
+const API_BASE_URL = 'http://qr-service.rabeh.sy/api/v1'
 
 // Helper function to format prices with commas
 export const formatPrice = (price: number): string => {
