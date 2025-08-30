@@ -46,7 +46,7 @@ export const fetchRestaurantInfo = async (restaurantId: string): Promise<Restaur
       primary_field?: {
         name: string;
         label: string;
-        type: 'number' | 'string';
+        type: 'number' | 'string' | 'tel';
         placeholder: string;
         shown: boolean;
         required: boolean;
@@ -54,7 +54,7 @@ export const fetchRestaurantInfo = async (restaurantId: string): Promise<Restaur
       secondary_field?: {
         name: string;
         label: string;
-        type: 'number' | 'string';
+        type: 'number' | 'string' | 'tel';
         placeholder: string;
         shown: boolean;
         required: boolean;

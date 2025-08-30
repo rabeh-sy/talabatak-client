@@ -32,7 +32,7 @@ export interface Order {
 export interface OrderField {
   name: string
   label: string
-  type: 'number' | 'string'
+  type: 'number' | 'string' | 'tel'
   placeholder: string
   shown: boolean
   required: boolean

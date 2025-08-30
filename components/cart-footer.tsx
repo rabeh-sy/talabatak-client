@@ -230,12 +230,29 @@ const MobileModal = ({
 
 // Helper function to validate form
 const isFormValid = (fieldValues: Record<string, string>, primaryField?: OrderField, secondaryField?: OrderField): boolean => {
-  if (primaryField?.required && (!fieldValues[primaryField.name] || fieldValues[primaryField.name].trim() === '')) {
-    return false
+  // Convert Arabic digits to English for validation
+  if (primaryField?.required) {
+    const value = fieldValues[primaryField.name] || ''
+    const convertedValue = primaryField.type === 'number' 
+      ? convertArabicDigitsToEnglish(value.trim())
+      : value.trim()
+    
+    if (!convertedValue || convertedValue === '') {
+      return false
+    }
   }
-  if (secondaryField?.required && (!fieldValues[secondaryField.name] || fieldValues[secondaryField.name].trim() === '')) {
-    return false
+  
+  if (secondaryField?.required) {
+    const value = fieldValues[secondaryField.name] || ''
+    const convertedValue = secondaryField.type === 'number' 
+      ? convertArabicDigitsToEnglish(value.trim())
+      : value.trim()
+    
+    if (!convertedValue || convertedValue === '') {
+      return false
+    }
   }
+  
   return true
 }
 
@@ -286,16 +303,22 @@ export function CartFooter({ restaurantId, primaryField, secondaryField, currenc
       
       if (primaryField?.shown) {
         const value = fieldValues[primaryField.name] || ''
-        processedFields[primaryField.name] = primaryField.type === 'number' 
+        const isNumberField = primaryField.type === 'number' || primaryField.type === 'tel'
+        const convertedValue = isNumberField 
           ? convertArabicDigitsToEnglish(value.trim())
           : value.trim()
+        
+        processedFields[primaryField.name] = convertedValue
       }
       
       if (secondaryField?.shown) {
         const value = fieldValues[secondaryField.name] || ''
-        processedFields[secondaryField.name] = secondaryField.type === 'number' 
+        const isNumberField = secondaryField.type === 'number' || secondaryField.type === 'tel'
+        const convertedValue = isNumberField 
           ? convertArabicDigitsToEnglish(value.trim())
           : value.trim()
+        
+        processedFields[secondaryField.name] = convertedValue
       }
       
       const orderData: BackendOrderRequest = {
@@ -349,7 +372,7 @@ export function CartFooter({ restaurantId, primaryField, secondaryField, currenc
   return (
     <>
       {/* Sticky Footer */}
-      <div className={`fixed bottom-0 left-0 right-0 ${themeColors.primary} border-t border-opacity-20 p-4 shadow-lg z-50`}>
+      <div className={`fixed bottom-0 left-0 right-0 ${themeColors.primary} p-4 shadow-lg z-50`}>
         <div className="flex items-center justify-between max-w-md mx-auto">
           <div className="flex items-center space-x-3">
             <ShoppingCart className={`h-6 w-6 ${themeColors.textSecondary}`} />
