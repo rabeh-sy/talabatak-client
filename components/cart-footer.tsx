@@ -101,7 +101,8 @@ const MobileModal = ({
   isSubmitting, 
   isSubmitted, 
   onSubmit, 
-  onClose 
+  onClose,
+  themeColors
 }: {
   isOpen: boolean
   primaryField?: OrderField
@@ -113,6 +114,7 @@ const MobileModal = ({
   isSubmitted: boolean
   onSubmit: () => void
   onClose: () => void
+  themeColors: ReturnType<typeof getThemeColors>
 }) => {
   if (!isOpen) return null
 
@@ -155,7 +157,7 @@ const MobileModal = ({
                     {primaryField.required && <span className="text-red-500 mr-1">*</span>}
                   </label>
                   <Input
-                    type={primaryField.type === 'number' ? 'number' : 'text'}
+                    type="text"
                     placeholder={primaryField.placeholder}
                     value={fieldValues[primaryField.name] || ''}
                     onChange={(e) => setFieldValue(primaryField.name, e.target.value)}
@@ -163,7 +165,6 @@ const MobileModal = ({
                     dir="rtl"
                     autoFocus
                     inputMode={primaryField.type === 'number' ? 'numeric' : 'text'}
-                    pattern={primaryField.type === 'number' ? '[0-9٠١٢٣٤٥٦٧٨٩]*' : undefined}
                   />
                 </div>
               )}
@@ -198,7 +199,7 @@ const MobileModal = ({
                 <Button
                   onClick={onSubmit}
                   disabled={!isFormValid(fieldValues, primaryField, secondaryField) || isSubmitting}
-                  className="w-full h-14 bg-primary hover:bg-primary/90 text-lg font-semibold"
+                  className={`w-full h-14 text-lg font-semibold ${themeColors.buttonPrimary}`}
                 >
                   {isSubmitting ? 'جاري الإرسال...' : 'إرسال الطلب'}
                 </Button>
@@ -233,7 +234,8 @@ const isFormValid = (fieldValues: Record<string, string>, primaryField?: OrderFi
   // Convert Arabic digits to English for validation
   if (primaryField?.required) {
     const value = fieldValues[primaryField.name] || ''
-    const convertedValue = primaryField.type === 'number' 
+    const isNumberField = primaryField.type === 'number' || primaryField.type === 'tel'
+    const convertedValue = isNumberField 
       ? convertArabicDigitsToEnglish(value.trim())
       : value.trim()
     
@@ -244,7 +246,8 @@ const isFormValid = (fieldValues: Record<string, string>, primaryField?: OrderFi
   
   if (secondaryField?.required) {
     const value = fieldValues[secondaryField.name] || ''
-    const convertedValue = secondaryField.type === 'number' 
+    const isNumberField = secondaryField.type === 'number' || secondaryField.type === 'tel'
+    const convertedValue = isNumberField 
       ? convertArabicDigitsToEnglish(value.trim())
       : value.trim()
     
@@ -404,6 +407,7 @@ export function CartFooter({ restaurantId, primaryField, secondaryField, currenc
           isSubmitted={isSubmitted}
           onSubmit={handleSubmitOrder}
           onClose={closeDialog}
+          themeColors={themeColors}
         />
       ) : (
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -422,13 +426,13 @@ export function CartFooter({ restaurantId, primaryField, secondaryField, currenc
                       {primaryField.required && <span className="text-red-500 mr-1">*</span>}
                     </label>
                     <Input
-                      type={primaryField.type === 'number' ? 'number' : 'text'}
+                      type="text"
                       placeholder={primaryField.placeholder}
                       value={fieldValues[primaryField.name] || ''}
                       onChange={(e) => setFieldValue(primaryField.name, e.target.value)}
                       className="text-center text-lg"
                       dir="rtl"
-                      pattern={primaryField.type === 'number' ? '[0-9٠١٢٣٤٥٦٧٨٩]*' : undefined}
+                      inputMode={primaryField.type === 'number' ? 'numeric' : 'text'}
                     />
                   </div>
                 )}
